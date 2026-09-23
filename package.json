@@ -1,0 +1,13 @@
+{
+  "name": "maganghub-daily-report",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node dailyReport.js",
+    "dev": "node --watch dailyReport.js"
+  },
+  "dependencies": {
+    "express": "^4",
+    "dotenv": "^16"
+  }
+}
