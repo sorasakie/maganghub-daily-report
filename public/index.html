@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MagangHub Daily Report</title>
+<meta name="description" content="Ringkas jadi laporan harian magang.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">M</span>
+      <h1>MagangHub Daily Report</h1>
+    </div>
+    <p class="tagline">Ringkas jadi laporan harian magang.</p>
+  </header>
+
+  <!-- input form: keywords go in, tone picks the writing style -->
+  <form class="panel" id="report-form" novalidate>
+    <label class="field-label" for="keywords">Kata kunci kegiatan</label>
+    <textarea id="keywords" name="keywords" rows="5"
+      placeholder="Tulis kata kunci kegiatan hari ini, mis.: standup meeting, review PR #42, baca dokumentasi API..."></textarea>
+
+    <!-- hidden radios styled as a segmented control, values match the api contract -->
+    <div class="tone-group">
+      <span class="field-label" id="tone-label">Gaya penulisan</span>
+      <div class="segmented" role="radiogroup" aria-labelledby="tone-label">
+        <input type="radio" name="tone" id="tone-formal" value="formal" checked>
+        <label for="tone-formal">Formal</label>
+        <input type="radio" name="tone" id="tone-santai" value="santai">
+        <label for="tone-santai">Santai</label>
+        <input type="radio" name="tone" id="tone-profesional" value="profesional">
+        <label for="tone-profesional">Profesional</label>
+        <input type="radio" name="tone" id="tone-singkat" value="singkat">
+        <label for="tone-singkat">Singkat</label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-primary" id="generate-btn">
+        <span class="btn-label">Buat laporan</span>
+      </button>
+      <!-- regenerate all stays hidden until the first report lands -->
+      <button type="button" class="btn-ghost" id="regen-all-btn" hidden>
+        <span class="btn-label">Generate ulang</span>
+      </button>
+    </div>
+
+    <!-- inline error slot, never an alert -->
+    <div class="form-error" id="form-error" role="alert"></div>
+  </form>
+
+  <!-- empty state shown before the first generate -->
+  <div class="empty" id="empty-state">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+      <path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/>
+    </svg>
+    <p>Belum ada laporan.</p>
+    <p class="hint">Isi kata kunci kegiatan di atas, lalu tekan “Buat laporan”.</p>
+  </div>
+
+  <!-- results: three cards keyed by the api fields uraian, pembelajaran, kendala -->
+  <section class="results" id="results" aria-live="polite">
+    <div class="results-head">
+      <h2>Laporan hari ini</h2>
+    </div>
+
+    <!-- one card per section: copy and buat ulang act on this card only -->
+    <article class="card" data-key="uraian">
+      <div class="card-busy"><span class="spinner"></span> Menulis ulang…</div>
+      <h3><span class="num">1</span>Uraian Aktivitas</h3>
+      <p class="card-text" data-field="uraian"></p>
+      <div class="card-error" data-error></div>
+      <div class="card-actions">
+        <button type="button" class="btn-small" data-action="copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-label">Salin</span>
+        </button>
+        <button type="button" class="btn-small" data-action="regen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          <span class="btn-label">Buat ulang</span>
+        </button>
+      </div>
+    </article>
+
+    <article class="card" data-key="pembelajaran">
+      <div class="card-busy"><span class="spinner"></span> Menulis ulang…</div>
+      <h3><span class="num">2</span>Pembelajaran yang Diperoleh</h3>
+      <p class="card-text" data-field="pembelajaran"></p>
+      <div class="card-error" data-error></div>
+      <div class="card-actions">
+        <button type="button" class="btn-small" data-action="copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-label">Salin</span>
+        </button>
+        <button type="button" class="btn-small" data-action="regen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          <span class="btn-label">Buat ulang</span>
+        </button>
+      </div>
+    </article>
+
+    <article class="card" data-key="kendala">
+      <div class="card-busy"><span class="spinner"></span> Menulis ulang…</div>
+      <h3><span class="num">3</span>Kendala yang Dialami</h3>
+      <p class="card-text" data-field="kendala"></p>
+      <div class="card-error" data-error></div>
+      <div class="card-actions">
+        <button type="button" class="btn-small" data-action="copy">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span class="btn-label">Salin</span>
+        </button>
+        <button type="button" class="btn-small" data-action="regen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          <span class="btn-label">Buat ulang</span>
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <footer>MagangHub — laporan harian magang, tanpa ribet.</footer>
+</div>
+
+<!-- defer runs the script after the dom is parsed, same timing as the old inline block -->
+<script src="app.js" defer></script>
+</body>
+</html>
