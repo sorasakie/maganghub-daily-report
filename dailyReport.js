@@ -26,11 +26,11 @@ function buildSystemPrompt(toneDesc, lengthDesc) {
   return (
     'Anda adalah pembuat laporan harian magang untuk MagangHub. Dari kata kunci kegiatan hari ini, ' +
     'hasilkan laporan harian. Jelaskan seluruh kata kunci secara lengkap. ' +
-    'Setiap bagian keluaran ("uraian", "pembelajaran", "kendala") wajib berisi minimal 200 karakter konten nyata. ' +
+    'Setiap bagian keluaran ("uraian", "pembelajaran", "kendala") wajib berisi minimal 100 karakter konten nyata. ' +
     'Keluarkan HANYA JSON ketat dengan tepat 3 key berupa string: ' +
     '"uraian" (Uraian Aktivitas — narasi kegiatan hari ini), ' +
     '"pembelajaran" (Pembelajaran yang Diperoleh — pelajaran yang didapat), ' +
-    '"kendala" (Kendala yang Dialami — kendala; jika tidak ada, tetap tulis paragraf jujur yang substansial minimal 200 karakter dengan mengelaborasi aspek proses, koordinasi, atau teknis yang dialami, tanpa mengarang masalah). ' +
+    '"kendala" (Kendala yang Dialami — kendala; jika tidak ada, tetap tulis paragraf jujur yang substansial minimal 100 karakter dengan mengelaborasi aspek proses, koordinasi, atau teknis yang dialami, tanpa mengarang masalah). ' +
     'Gunakan gaya bahasa berikut: ' + toneDesc + '. ' +
     (lengthDesc ? 'Panjang tulisan: ' + lengthDesc + '. ' : '') +
     'Jika ada catatan regenerate, perlakukan sebagai instruksi tambahan untuk menulis ulang secara berbeda (lebih pendek/sudut berbeda) sambil mempertahankan bentuk JSON. ' +
@@ -91,7 +91,7 @@ async function generate(userText, systemPrompt) {
 }
 
 // every section must reach MIN_SECTION characters of real content
-const MIN_SECTION = 200;
+const MIN_SECTION = 100;
 const SECTIONS = ['uraian', 'pembelajaran', 'kendala'];
 function shortSections(parsed) {
   return SECTIONS.filter((k) => typeof parsed[k] !== 'string' || parsed[k].length < MIN_SECTION);
@@ -130,7 +130,7 @@ app.post('/chat', async (req, res) => {
       try {
         parsed = await generate(
           userText +
-            '\n\nCatatan: setiap bagian ("uraian", "pembelajaran", "kendala") wajib berisi minimal 200 karakter konten nyata, perluas bagian yang masih kurang dari 200 karakter.',
+            '\n\nCatatan: setiap bagian ("uraian", "pembelajaran", "kendala") wajib berisi minimal 100 karakter konten nyata, perluas bagian yang masih kurang dari 100 karakter.',
           systemPrompt
         );
       } catch (retryErr) {
