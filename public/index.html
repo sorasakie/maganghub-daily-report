@@ -39,6 +39,8 @@
     <label class="field-label" for="keywords">Kata kunci kegiatan</label>
     <textarea id="keywords" name="keywords" rows="5"
       placeholder="Tulis kata kunci kegiatan hari ini, mis.: standup meeting, review PR #42, baca dokumentasi API..."></textarea>
+    <!-- the 200 character rule is about each output section, not this input -->
+    <p class="form-hint">Setiap bagian dihasilkan minimal 200 karakter.</p>
 
     <!-- hidden radios styled as a segmented control, values match the api contract -->
     <div class="tone-group">
@@ -52,6 +54,19 @@
         <label for="tone-profesional">Profesional</label>
         <input type="radio" name="tone" id="tone-singkat" value="singkat">
         <label for="tone-singkat">Singkat</label>
+      </div>
+    </div>
+
+    <!-- same segmented pattern as tone, values match the api contract -->
+    <div class="tone-group">
+      <span class="field-label" id="length-label">Panjang laporan</span>
+      <div class="segmented" role="radiogroup" aria-labelledby="length-label">
+        <input type="radio" name="length" id="length-shorter" value="shorter">
+        <label for="length-shorter">Lebih singkat</label>
+        <input type="radio" name="length" id="length-default" value="default" checked>
+        <label for="length-default">Standar</label>
+        <input type="radio" name="length" id="length-longer" value="longer">
+        <label for="length-longer">Lebih panjang</label>
       </div>
     </div>
 

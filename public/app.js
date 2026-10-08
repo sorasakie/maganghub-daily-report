@@ -43,6 +43,11 @@
     return keywordsEl.value.trim();
   }
 
+  function length() {
+    var checked = form.querySelector('input[name="length"]:checked');
+    return checked ? checked.value : "default";
+  }
+
   function showFormError(msg) {
     formError.textContent = msg;
     formError.classList.add("show");
@@ -97,7 +102,7 @@
   }
 
   function currentBody(regenerate) {
-    var body = { keywords: keywords(), tone: tone() };
+    var body = { keywords: keywords(), tone: tone(), length: length() };
     if (regenerate) body.regenerate = regenerate;
     return body;
   }
@@ -177,8 +182,7 @@
 
   function regenCard(card, key) {
     if (card.classList.contains("busy")) return;
-    var kw = keywords();
-    if (!kw) {
+    if (!keywords()) {
       showFormError("Tulis kata kunci kegiatan dulu.");
       keywordsEl.focus();
       return;
