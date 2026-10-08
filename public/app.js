@@ -18,6 +18,22 @@
   var hasResults = false;
   var busy = false;
 
+  // theme toggle: light is the default, dark is an explicit choice
+  var themeToggle = document.getElementById("theme-toggle");
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+  function syncThemeButton() {
+    themeToggle.setAttribute("aria-pressed", currentTheme() === "dark" ? "true" : "false");
+  }
+  themeToggle.addEventListener("click", function () {
+    var next = currentTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    syncThemeButton();
+  });
+  syncThemeButton();
+
   function tone() {
     var checked = form.querySelector('input[name="tone"]:checked');
     return checked ? checked.value : "formal";
